@@ -31,12 +31,13 @@ class MyApp extends StatelessWidget {
           return MaterialPageRoute(
             builder: (context) {
               if (context.isSmallScreen) {
-                if (settings.name == Page1.path) {
-                  return const Page1();
-                } else if (settings.name == Page2.path) {
-                  return const Page2();
-                } else if (settings.name == Page3.path) {
-                  return const Page3();
+                switch (settings.name) {
+                  case Page1.path:
+                    return const Page1();
+                  case Page2.path:
+                    return const Page2();
+                  case Page3.path:
+                    return const Page3();
                 }
               }
               return PagesWrapper(subRoute: subRoute);

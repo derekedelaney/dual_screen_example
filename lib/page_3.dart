@@ -1,3 +1,4 @@
+import 'package:dual_screen_example/context_extension.dart';
 import 'package:dual_screen_example/pages_wrapper.dart';
 import 'package:flutter/material.dart';
 
@@ -9,7 +10,7 @@ class Page3 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(automaticallyImplyLeading: false),
+      appBar: AppBar(automaticallyImplyLeading: context.isSmallScreen),
       body: const Center(
         child: Text('This is the third page.'),
       ),

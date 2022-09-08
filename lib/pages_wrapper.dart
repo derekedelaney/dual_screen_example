@@ -39,6 +39,18 @@ class _PagesWrapperState extends State<PagesWrapper> {
     return TwoPane(
       startPane: Navigator(
         key: _navigatorKey,
+        onUnknownRoute: (settings) {
+          return MaterialPageRoute(
+            builder: (context) {
+              Navigator.of(context).pop();
+              return const Scaffold(
+                body: Center(
+                  child: Text('Not Found'),
+                ),
+              );
+            },
+          );
+        },
         onGenerateRoute: (settings) {
           final name = settings.name!;
           if (Page1.path.endsWith(name) || name == '/') {
