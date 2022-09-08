@@ -1,6 +1,6 @@
 # dual_screen_example
 
-A new Flutter project.
+An example project to use flutter_dual_screen with a nested navigator in the start pane.
 
 ## Getting Started
 
