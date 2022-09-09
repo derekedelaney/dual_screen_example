@@ -7,9 +7,11 @@ import 'package:dual_screen_example/page_3.dart';
 import 'package:flutter/material.dart';
 
 class PagesWrapper extends StatefulWidget {
-  const PagesWrapper({Key? key, required this.subRoute}) : super(key: key);
+  const PagesWrapper({Key? key, required this.subRoute, this.settings})
+      : super(key: key);
   static const path = '/pages';
   final String subRoute;
+  final RouteSettings? settings;
 
   @override
   State<PagesWrapper> createState() => _PagesWrapperState();
@@ -17,7 +19,7 @@ class PagesWrapper extends StatefulWidget {
 
 class _PagesWrapperState extends State<PagesWrapper> {
   final _navigatorKey = GlobalKey<NavigatorState>();
-  bool showPage3 = false;
+  int? selectedIndex;
 
   @override
   void initState() {
@@ -25,9 +27,11 @@ class _PagesWrapperState extends State<PagesWrapper> {
       if (Page2.path.endsWith(widget.subRoute)) {
         _navigatorKey.currentState?.pushNamed(widget.subRoute);
       } else if (Page3.path.endsWith(widget.subRoute)) {
-        _navigatorKey.currentState?.pushNamed(Page2.path);
+        _navigatorKey.currentState
+            ?.pushNamed(Page2.path, arguments: widget.settings?.arguments);
         setState(() {
-          showPage3 = true;
+          selectedIndex =
+              (widget.settings?.arguments as Map<String, int>)['index'];
         });
       }
     });
@@ -56,17 +60,21 @@ class _PagesWrapperState extends State<PagesWrapper> {
           if (Page1.path.endsWith(name) || name == '/') {
             return MaterialPageRoute(builder: (context) => const Page1());
           } else if (Page2.path.endsWith(name)) {
-            return MaterialPageRoute(builder: (context) => const Page2());
+            final index = settings.arguments != null
+                ? (settings.arguments as Map<String, int>)['index']
+                : null;
+            return MaterialPageRoute(
+                builder: (context) => Page2(selectedIndex: index));
           } else if (Page3.path.endsWith(name)) {
             setState(() {
-              showPage3 = true;
+              selectedIndex = (settings.arguments as Map<String, int>)['index'];
             });
           }
           return null;
         },
       ),
-      endPane: Page3.path.endsWith(widget.subRoute) || showPage3
-          ? const Page3()
+      endPane: selectedIndex != null
+          ? Page3(index: selectedIndex!)
           : const NoItemPage(),
       panePriority:
           context.isSmallScreen ? TwoPanePriority.start : TwoPanePriority.both,

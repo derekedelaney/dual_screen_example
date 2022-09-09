@@ -37,10 +37,12 @@ class MyApp extends StatelessWidget {
                   case Page2.path:
                     return const Page2();
                   case Page3.path:
-                    return const Page3();
+                    final index =
+                        (settings.arguments as Map<String, int>)['index'];
+                    return Page3(index: index!);
                 }
               }
-              return PagesWrapper(subRoute: subRoute);
+              return PagesWrapper(subRoute: subRoute, settings: settings);
             },
           );
         }
@@ -93,11 +95,12 @@ class _MyHomePageState extends State<MyHomePage> {
           const Divider(height: 1),
           ListTile(
             title: const Text('Page 3'),
-            subtitle: const Text('Navigate to Page 3'),
+            subtitle: const Text('Navigate to Page 2 selecting Nested 3'),
             trailing: const Icon(Icons.chevron_right),
             onTap: () {
               Navigator.of(context).pushNamed(
                 Page3.path,
+                arguments: {'index': 3},
               );
             },
           ),
