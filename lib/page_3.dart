@@ -12,7 +12,10 @@ class Page3 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(automaticallyImplyLeading: context.isSmallScreen),
+      appBar: AppBar(
+        automaticallyImplyLeading: context.isSmallScreen,
+        title: context.isSmallScreen ? const Text('Page 3') : null,
+      ),
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,

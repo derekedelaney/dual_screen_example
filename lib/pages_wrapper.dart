@@ -40,45 +40,56 @@ class _PagesWrapperState extends State<PagesWrapper> {
 
   @override
   Widget build(BuildContext context) {
-    return TwoPane(
-      startPane: Navigator(
-        key: _navigatorKey,
-        onUnknownRoute: (settings) {
-          return MaterialPageRoute(
-            builder: (context) {
-              Navigator.of(context).pop();
-              return const Scaffold(
-                body: Center(
-                  child: Text('Not Found'),
-                ),
-              );
-            },
-          );
-        },
-        onGenerateRoute: (settings) {
-          final name = settings.name!;
-          if (Page1.path.endsWith(name) || name == '/') {
-            return MaterialPageRoute(builder: (context) => const Page1());
-          } else if (Page2.path.endsWith(name)) {
-            final index = settings.arguments != null
-                ? (settings.arguments as Map<String, int>)['index']
-                : null;
+    return WillPopScope(
+      onWillPop: () async {
+        if (_navigatorKey.currentState?.canPop() ?? false) {
+          _navigatorKey.currentState?.pop();
+          return false;
+        }
+        return true;
+      },
+      child: TwoPane(
+        startPane: Navigator(
+          key: _navigatorKey,
+          onUnknownRoute: (settings) {
             return MaterialPageRoute(
-                builder: (context) => Page2(selectedIndex: index));
-          } else if (Page3.path.endsWith(name)) {
-            setState(() {
-              selectedIndex = (settings.arguments as Map<String, int>)['index'];
-            });
-          }
-          return null;
-        },
+              builder: (context) {
+                Navigator.of(context).pop();
+                return const Scaffold(
+                  body: Center(
+                    child: Text('Not Found'),
+                  ),
+                );
+              },
+            );
+          },
+          onGenerateRoute: (settings) {
+            final name = settings.name!;
+            if (Page1.path.endsWith(name) || name == '/') {
+              return MaterialPageRoute(builder: (context) => const Page1());
+            } else if (Page2.path.endsWith(name)) {
+              final index = settings.arguments != null
+                  ? (settings.arguments as Map<String, int>)['index']
+                  : null;
+              return MaterialPageRoute(
+                  builder: (context) => Page2(selectedIndex: index));
+            } else if (Page3.path.endsWith(name)) {
+              setState(() {
+                selectedIndex =
+                    (settings.arguments as Map<String, int>)['index'];
+              });
+            }
+            return null;
+          },
+        ),
+        endPane: selectedIndex != null
+            ? Page3(index: selectedIndex!)
+            : const NoItemPage(),
+        panePriority: context.isSmallScreen
+            ? TwoPanePriority.start
+            : TwoPanePriority.both,
+        paneProportion: context.paneProportion,
       ),
-      endPane: selectedIndex != null
-          ? Page3(index: selectedIndex!)
-          : const NoItemPage(),
-      panePriority:
-          context.isSmallScreen ? TwoPanePriority.start : TwoPanePriority.both,
-      paneProportion: context.paneProportion,
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:dual_screen/dual_screen.dart';
 import 'package:dual_screen_example/context_extension.dart';
 import 'package:dual_screen_example/page_1.dart';
 import 'package:dual_screen_example/page_2.dart';
@@ -65,48 +66,57 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
+    return TwoPane(
+      startPane: Scaffold(
+        appBar: AppBar(
+          title: Text(widget.title),
+        ),
+        body: ListView(
+          children: [
+            ListTile(
+              title: const Text('Page 1'),
+              subtitle: const Text('Navigate to Page 1'),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () {
+                Navigator.of(context).pushNamed(
+                  Page1.path,
+                );
+              },
+            ),
+            const Divider(height: 1),
+            ListTile(
+              title: const Text('Page 2'),
+              subtitle: const Text('Navigate to Page 2'),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () {
+                Navigator.of(context).pushNamed(
+                  Page2.path,
+                );
+              },
+            ),
+            const Divider(height: 1),
+            ListTile(
+              title: const Text('Page 3'),
+              subtitle: const Text('Navigate to Page 2 selecting Nested 3'),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () {
+                Navigator.of(context).pushNamed(
+                  Page3.path,
+                  arguments: {'index': 3},
+                );
+              },
+            ),
+            const Divider(height: 1),
+          ],
+        ),
       ),
-      body: ListView(
-        children: [
-          ListTile(
-            title: const Text('Page 1'),
-            subtitle: const Text('Navigate to Page 1'),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () {
-              Navigator.of(context).pushNamed(
-                Page1.path,
-              );
-            },
-          ),
-          const Divider(height: 1),
-          ListTile(
-            title: const Text('Page 2'),
-            subtitle: const Text('Navigate to Page 2'),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () {
-              Navigator.of(context).pushNamed(
-                Page2.path,
-              );
-            },
-          ),
-          const Divider(height: 1),
-          ListTile(
-            title: const Text('Page 3'),
-            subtitle: const Text('Navigate to Page 2 selecting Nested 3'),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () {
-              Navigator.of(context).pushNamed(
-                Page3.path,
-                arguments: {'index': 3},
-              );
-            },
-          ),
-          const Divider(height: 1),
-        ],
+      endPane: const Scaffold(
+        body: Center(
+          child: Text('Welcome to my example app.'),
+        ),
       ),
+      panePriority:
+          context.hasHinge ? TwoPanePriority.both : TwoPanePriority.start,
     );
   }
 }
